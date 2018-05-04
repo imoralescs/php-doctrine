@@ -8,6 +8,8 @@ use Psr\Http\Message\RequestInterface;
 use NamespacesName\Auth\Hashing\Hasher;
 use NamespacesName\Models\User;
 use NamespacesName\Models\Post;
+use NamespacesName\Models\Genus;
+use NamespacesName\Models\GenusNote;
 
 use Doctrine\ORM\EntityManager;
 
@@ -29,6 +31,7 @@ class MainController extends Controller
         // Other methods: findAll() find(id) findOneBy(criteria: array) findBy(criteria: array)
         
         // Find all
+        /*
         $query = $this->db->getRepository('NamespacesName\Models\User');
         $users = $query->findAll();
         $responseJson = array();
@@ -38,7 +41,19 @@ class MainController extends Controller
                 'name' => $user->name,
                 'email' => $user->email
             );
+        }*/
+
+        /*
+        $query = $this->db->getRepository('NamespacesName\Models\Genus');
+        $genus = $query->findAll();
+        $responseJson = array();
+        foreach($genus as $specie) {
+            $responseJson[] = array(
+                'id' => $specie->id,
+                'name' => $specie->name,
+            );
         }
+        */
 
         // Find by id
         /*
@@ -96,8 +111,16 @@ class MainController extends Controller
             );
         }
         */
+/*
+        $query = $this->db->getRepository('NamespacesName\Models\Friendships');
+        $friends = $query->createQueryBuilder()
+            ->from('friendships')
+            ->join('users.id')
+            ->where('users.id')
 
-        $response->getBody()->write(json_encode($responseJson));
+        var_dump($friends); exit;
+*/
+        $response->getBody()->write(json_encode('Response'));
         return $response->withStatus(202);
     }
 
@@ -133,6 +156,7 @@ class MainController extends Controller
             key: password_confirmation  value: password
         */
         
+        /*
         $data = $request->getParsedBody();
         
         $user = new User;
@@ -145,8 +169,29 @@ class MainController extends Controller
         
         $this->db->persist($user);
         $this->db->flush();
+        */
 
-        $response->getBody()->write(json_encode($user));
+        // Save relation, one to many value.
+        /*
+        $genus = new Genus();
+        $genus->setName('Spermophilus'.rand(1, 100));
+        $genus->setSubFamily('Squirrel');
+        $genus->setSpeciesCount(rand(100, 99999));
+        $genus->setFunFact("");
+
+        $genusNote = new GenusNote();
+        $genusNote->setUsername('AquaWeaver');
+        $genusNote->setUserAvatarFilename('ryan.jpeg');
+        $genusNote->setNote('I counted 8 legs... as they wrapped around me');
+        $genusNote->setCreatedAt(new \DateTime('-1 month'));
+        $genusNote->setGenus($genus); // Need to pass the entire object.
+        
+        $this->db->persist($genus);
+        $this->db->persist($genusNote);
+        $this->db->flush();
+        */
+
+        $response->getBody()->write(json_encode('Created'));
         return $response->withStatus(202);
     }
 }
